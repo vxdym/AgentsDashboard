@@ -1,0 +1,55 @@
+@page "/feature/neu"
+
+<PageTitle>Neues Feature</PageTitle>
+
+<h1>Neues Feature erstellen</h1>
+
+<div class="form">
+    <div class="mb-3">
+        <label class="form-label">Titel</label>
+        <input class="form-control" @bind="title" @bind:event="oninput" placeholder="z.B. Kalender Wochenansicht" />
+        @if (!string.IsNullOrWhiteSpace(title))
+        {
+            <div class="form-text">Worktree / Branch: <code>@GitService.MakeName(title)</code></div>
+        }
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Beschreibung</label>
+        <textarea class="form-control" rows="8" @bind="description" placeholder="Was muss das Feature können?"></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Screenshots (optional)</label>
+        <InputFile class="form-control" OnChange="OnFilesSelected" multiple accept="image/*" />
+        @if (files.Count > 0)
+        {
+            <ul class="mt-2 mb-0">
+                @foreach (var file in files)
+                {
+                    <li>@file.Name (@(file.Size / 1024) KB)</li>
+                }
+            </ul>
+        }
+    </div>
+
+    @if (error != null)
+    {
+        <div class="alert alert-danger"><pre class="mb-0">@error</pre></div>
+    }
+
+    <div class="d-flex gap-2">
+        <button class="btn btn-primary" @onclick="Create" disabled="@(busy || string.IsNullOrWhiteSpace(title))">
+            @if (busy)
+            {
+                <span class="spinner-border spinner-border-sm me-2"></span>
+                <span>Worktree wird angelegt...</span>
+            }
+            else
+            {
+                <span>Feature anlegen</span>
+            }
+        </button>
+        <a class="btn btn-outline-secondary" href="">Abbrechen</a>
+    </div>
+</div>
