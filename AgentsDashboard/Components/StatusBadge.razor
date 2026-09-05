@@ -1,0 +1,27 @@
+@using AgentsDashboard.Models
+
+<span class="badge @CssClass">@Text</span>
+
+@code {
+    [Parameter] public FeatureStatus Status { get; set; }
+
+    private string Text => Status switch
+    {
+        FeatureStatus.Erstellt => "Erstellt",
+        FeatureStatus.InPlanung => "In Planung",
+        FeatureStatus.InArbeit => "In Arbeit",
+        FeatureStatus.BereitZurPruefung => "Bereit zur Prüfung",
+        FeatureStatus.Fertig => "Fertig",
+        _ => Status.ToString()
+    };
+
+    private string CssClass => Status switch
+    {
+        FeatureStatus.Erstellt => "text-bg-secondary",
+        FeatureStatus.InPlanung => "text-bg-info",
+        FeatureStatus.InArbeit => "text-bg-primary",
+        FeatureStatus.BereitZurPruefung => "text-bg-warning",
+        FeatureStatus.Fertig => "text-bg-success",
+        _ => "text-bg-light"
+    };
+}

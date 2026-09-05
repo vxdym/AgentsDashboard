@@ -1,0 +1,40 @@
+.feature-card {
+    cursor: pointer;
+    height: 100%;
+    transition: box-shadow 0.15s;
+}
+
+.feature-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+.card-title {
+    margin-bottom: 0.25rem;
+}
+
+.branch {
+    font-family: Consolas, monospace;
+    font-size: 0.8rem;
+    color: #6b7280;
+    margin-bottom: 0.5rem;
+}
+
+.description {
+    color: #374151;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    white-space: pre-line;
+}
+
+.card-footer {
+    background: transparent;
+}
