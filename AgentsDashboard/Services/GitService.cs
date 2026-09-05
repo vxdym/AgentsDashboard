@@ -37,7 +37,7 @@ namespace AgentsDashboard.Services
 
         public async Task<string> CreateWorktree(string name)
         {
-            var path = Path.Combine(WorktreeRoot, name);
+            var path = Path.GetFullPath(Path.Combine(WorktreeRoot, name));
 
             if (Directory.Exists(path))
                 throw new Exception($"Ordner {path} existiert bereits.");

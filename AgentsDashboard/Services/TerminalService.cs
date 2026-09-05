@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace AgentsDashboard.Services
 {
     public class TerminalService
@@ -30,7 +32,7 @@ namespace AgentsDashboard.Services
         {
             Directory.CreateDirectory(promptDir);
             var file = Path.Combine(promptDir, $"{name}.md");
-            File.WriteAllText(file, prompt);
+            File.WriteAllText(file, prompt, Encoding.UTF8);
 
             var mode = planMode ? "--permission-mode plan " : "";
             OpenTerminal(path, $"claude {mode}(Get-Content -Raw '{file}')");
