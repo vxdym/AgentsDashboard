@@ -7,6 +7,8 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddSingleton<FeatureStore>();
+builder.Services.AddSingleton<ProcessRunner>();
+builder.Services.AddSingleton<GitService>();
 
 var app = builder.Build();
 
