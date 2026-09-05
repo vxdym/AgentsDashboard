@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace AgentsDashboard.Models
 {
     public class Feature
@@ -20,6 +22,7 @@ namespace AgentsDashboard.Models
             Description = description;
         }
 
+        [JsonIgnore]
         public string FolderName => Path.GetFileName(WorktreePath);
     }
 }

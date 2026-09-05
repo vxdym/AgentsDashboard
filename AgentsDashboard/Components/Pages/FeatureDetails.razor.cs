@@ -100,7 +100,7 @@ namespace AgentsDashboard.Components.Pages
             Try(() =>
             {
                 var prompt = Prompts.Build(feature!, type);
-                var name = $"{feature.BranchName}-{type}".ToLower();
+                var name = $"{feature!.BranchName}-{type}".ToLower();
                 Terminal.OpenClaudeWithPrompt(feature.WorktreePath, name, prompt, type == AgentType.Planung);
 
                 if (type == AgentType.Planung && feature.Status == FeatureStatus.Erstellt)
