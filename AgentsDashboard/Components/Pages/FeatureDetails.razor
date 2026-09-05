@@ -1,0 +1,174 @@
+@page "/feature/{Id}"
+
+<PageTitle>@(feature?.Title ?? "Feature")</PageTitle>
+
+@if (feature == null)
+{
+    <p class="text-muted">Feature nicht gefunden.</p>
+    <a href="">Zurück zur Übersicht</a>
+}
+else
+{
+    <div class="head">
+        <div>
+            <a class="back" href="">← Übersicht</a>
+            <h1>@feature.Title</h1>
+            <div class="meta">
+                <StatusBadge Status="feature.Status" />
+                <code>@feature.BranchName</code>
+                <span class="path">@feature.WorktreePath</span>
+            </div>
+        </div>
+        <div class="status-select">
+            <label class="form-label">Status</label>
+            <select class="form-select" value="@feature.Status" @onchange="OnStatusChanged">
+                <option value="@FeatureStatus.Erstellt">Erstellt</option>
+                <option value="@FeatureStatus.InPlanung">In Planung</option>
+                <option value="@FeatureStatus.InArbeit">In Arbeit</option>
+                <option value="@FeatureStatus.BereitZurPruefung">Bereit zur Prüfung</option>
+                <option value="@FeatureStatus.Fertig">Fertig</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="grid">
+        <div class="main">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Beschreibung</h5>
+                    <textarea class="form-control" rows="8" @bind="feature.Description"></textarea>
+                    <button class="btn btn-sm btn-outline-primary mt-2" @onclick="SaveDescription">Speichern</button>
+                    @if (saved)
+                    {
+                        <span class="text-success ms-2">Gespeichert</span>
+                    }
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Screenshots</h5>
+                    @if (feature.Screenshots.Count == 0)
+                    {
+                        <p class="text-muted">Keine Screenshots.</p>
+                    }
+                    <div class="shots">
+                        @foreach (var shot in feature.Screenshots)
+                        {
+                            <a href="@shot" target="_blank"><img src="@shot" alt="Screenshot" /></a>
+                        }
+                    </div>
+                    <InputFile class="form-control form-control-sm mt-2" OnChange="AddScreenshots" multiple accept="image/*" />
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Docker</h5>
+                    <div class="d-flex gap-2 align-items-center flex-wrap">
+                        <button class="btn btn-success" @onclick="StartDocker" disabled="@dockerBusy">
+                            @if (dockerBusy)
+                            {
+                                <span class="spinner-border spinner-border-sm me-2"></span>
+                            }
+                            Docker starten
+                        </button>
+                        <button class="btn btn-outline-danger" @onclick="StopDocker" disabled="@dockerBusy">Docker stoppen</button>
+                        @if (dockerRunning)
+                        {
+                            <span class="badge text-bg-success">läuft</span>
+                            <a href="https://localhost" target="_blank">https://localhost</a>
+                        }
+                        else
+                        {
+                            <span class="badge text-bg-secondary">gestoppt</span>
+                        }
+                    </div>
+                    <p class="form-text mb-0">Vor dem Start werden alle anderen laufenden Salonary-Stacks heruntergefahren.</p>
+                    @if (dockerLog.Count > 0)
+                    {
+                        <pre class="log">@string.Join("\n", dockerLog)</pre>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="side">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Öffnen</h5>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-outline-dark" @onclick="OpenVsCode" disabled="@(!worktreeExists)">VS Code</button>
+                        <button class="btn btn-outline-dark" @onclick="OpenClaude" disabled="@(!worktreeExists)">Claude Terminal</button>
+                        <button class="btn btn-outline-dark" @onclick="OpenCodex" disabled="@(!worktreeExists)">Codex Terminal</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Agenten</h5>
+                    <div class="d-grid gap-2">
+                        @if (feature.Status == FeatureStatus.Erstellt || feature.Status == FeatureStatus.InPlanung)
+                        {
+                            <button class="btn btn-primary" @onclick="() => StartAgent(AgentType.Planung)" disabled="@(!worktreeExists)">Planungs-Agent</button>
+                            <button class="btn btn-primary" @onclick="() => StartAgent(AgentType.Implementierung)" disabled="@(!worktreeExists)">Implementierungs-Agent</button>
+                        }
+                        <button class="btn btn-outline-primary" @onclick="() => StartAgent(AgentType.Review)" disabled="@(!worktreeExists)">Review-Agent</button>
+                        <button class="btn btn-outline-primary" @onclick="() => StartAgent(AgentType.Security)" disabled="@(!worktreeExists)">Security-Agent</button>
+                    </div>
+                    <p class="form-text mb-0">Jeder Agent startet in einer neuen Claude-Session im Worktree.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Git</h5>
+                    @if (gitInfo == null)
+                    {
+                        <span class="spinner-border spinner-border-sm"></span>
+                    }
+                    else if (!gitInfo.Exists)
+                    {
+                        <p class="text-danger mb-0">Worktree-Ordner existiert nicht mehr.</p>
+                    }
+                    else
+                    {
+                        <dl class="git">
+                            <dt>Branch</dt>
+                            <dd><code>@gitInfo.Branch</code></dd>
+                            <dt>Commits vor master</dt>
+                            <dd>@gitInfo.CommitsAhead</dd>
+                            <dt>Offene Änderungen</dt>
+                            <dd>@(gitInfo.HasChanges ? "ja" : "nein")</dd>
+                            <dt>Letzter Commit</dt>
+                            <dd>@gitInfo.LastCommit</dd>
+                        </dl>
+                        <button class="btn btn-sm btn-outline-secondary" @onclick="LoadGitInfo">Aktualisieren</button>
+                    }
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Entfernen</h5>
+                    <p class="form-text">Löscht Feature, Worktree und Branch.</p>
+                    @if (!confirmRemove)
+                    {
+                        <button class="btn btn-sm btn-outline-danger" @onclick="() => confirmRemove = true">Feature entfernen</button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-sm btn-danger me-2" @onclick="Remove">Wirklich entfernen</button>
+                        <button class="btn btn-sm btn-outline-secondary" @onclick="() => confirmRemove = false">Abbrechen</button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (error != null)
+    {
+        <div class="alert alert-danger mt-3"><pre class="mb-0">@error</pre></div>
+    }
+}

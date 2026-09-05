@@ -1,0 +1,81 @@
+.head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.back {
+    font-size: 0.85rem;
+    text-decoration: none;
+}
+
+.meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.path {
+    font-size: 0.8rem;
+    color: #6b7280;
+}
+
+.status-select {
+    min-width: 220px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 1rem;
+    align-items: start;
+}
+
+.main, .side {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.shots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.shots img {
+    height: 120px;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+}
+
+.log {
+    background: #111827;
+    color: #d1d5db;
+    font-size: 0.75rem;
+    padding: 0.75rem;
+    border-radius: 4px;
+    max-height: 320px;
+    overflow: auto;
+    margin-top: 0.75rem;
+    margin-bottom: 0;
+}
+
+.git dt {
+    font-size: 0.75rem;
+    color: #6b7280;
+    font-weight: normal;
+}
+
+.git dd {
+    margin-bottom: 0.5rem;
+}
+
+@media (max-width: 900px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}

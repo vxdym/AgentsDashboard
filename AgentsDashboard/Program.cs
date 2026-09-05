@@ -9,6 +9,9 @@ builder.Services.AddRazorComponents()
 builder.Services.AddSingleton<FeatureStore>();
 builder.Services.AddSingleton<ProcessRunner>();
 builder.Services.AddSingleton<GitService>();
+builder.Services.AddSingleton<DockerService>();
+builder.Services.AddSingleton<TerminalService>();
+builder.Services.AddSingleton<AgentPrompts>();
 
 var app = builder.Build();
 
