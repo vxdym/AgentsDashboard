@@ -2,4 +2,32 @@
 
 <PageTitle>Changelog</PageTitle>
 
-<h1>Changelog</h1>
+<div class="toolbar">
+    <h1>Changelog</h1>
+    <div>
+        <button class="btn btn-outline-primary" @onclick="Export" disabled="@(done.Count == 0)">CHANGELOG.md schreiben</button>
+        @if (exportPath != null)
+        {
+            <small class="text-success ms-2">Gespeichert: @exportPath</small>
+        }
+    </div>
+</div>
+
+@if (done.Count == 0)
+{
+    <p class="text-muted">Noch keine fertigen Features.</p>
+}
+else
+{
+    @foreach (var feature in done)
+    {
+        <div class="entry">
+            <div class="date">@feature.DoneAt?.ToString("dd.MM.yyyy")</div>
+            <div>
+                <h5>@feature.Title</h5>
+                <div class="branch">@feature.BranchName</div>
+                <p>@feature.Description</p>
+            </div>
+        </div>
+    }
+}

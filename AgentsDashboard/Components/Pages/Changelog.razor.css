@@ -1,0 +1,32 @@
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.entry {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.date {
+    color: #6b7280;
+    font-size: 0.9rem;
+    padding-top: 0.2rem;
+}
+
+.branch {
+    font-family: Consolas, monospace;
+    font-size: 0.8rem;
+    color: #6b7280;
+    margin-bottom: 0.5rem;
+}
+
+p {
+    white-space: pre-line;
+    margin-bottom: 0;
+}
