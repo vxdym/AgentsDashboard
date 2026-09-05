@@ -480,3 +480,7 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# Dashboard Daten
+AgentsDashboard/Data/
+AgentsDashboard/wwwroot/screenshots/
