@@ -6,7 +6,7 @@ namespace AgentsDashboard.Services
 {
     public class ProcessRunner
     {
-        public async Task<ProcessResult> Run(string fileName, string arguments, string workingDir)
+        public async Task<ProcessResult> Run(string fileName, string arguments, string workingDir, Action<string>? onLine = null)
         {
             var info = new ProcessStartInfo
             {
@@ -24,8 +24,16 @@ namespace AgentsDashboard.Services
             using var process = new Process { StartInfo = info };
             var output = new StringBuilder();
 
-            process.OutputDataReceived += (s, e) => { if (e.Data != null) output.AppendLine(e.Data); };
-            process.ErrorDataReceived += (s, e) => { if (e.Data != null) output.AppendLine(e.Data); };
+            void Append(string? line)
+            {
+                if (line == null)
+                    return;
+                output.AppendLine(line);
+                onLine?.Invoke(line);
+            }
+
+            process.OutputDataReceived += (s, e) => Append(e.Data);
+            process.ErrorDataReceived += (s, e) => Append(e.Data);
 
             process.Start();
             process.BeginOutputReadLine();
@@ -43,6 +51,20 @@ namespace AgentsDashboard.Services
                 Arguments = arguments,
                 WorkingDirectory = workingDir,
                 UseShellExecute = true
+            };
+
+            Process.Start(info);
+        }
+
+        public void StartHidden(string fileName, string arguments, string workingDir)
+        {
+            var info = new ProcessStartInfo
+            {
+                FileName = fileName,
+                Arguments = arguments,
+                WorkingDirectory = workingDir,
+                UseShellExecute = false,
+                CreateNoWindow = true
             };
 
             Process.Start(info);
