@@ -10,3 +10,11 @@
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 1rem;
 }
+
+.group-title {
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.75rem;
+    margin: 1.25rem 0 0.5rem;
+}

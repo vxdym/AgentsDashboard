@@ -11,10 +11,30 @@
     </div>
     <div class="card-footer">
         <small class="text-muted">@Feature.CreatedAt.ToString("dd.MM.yyyy")</small>
+        <div class="info">
+            @if (DockerRunning)
+            {
+                <span class="badge text-bg-success">Docker</span>
+            }
+            @if (Git != null && Git.Exists)
+            {
+                <small class="text-muted" title="Commits vor master">@Git.CommitsAhead Commits</small>
+                @if (Git.HasChanges)
+                {
+                    <small class="text-warning" title="Offene Änderungen">●</small>
+                }
+            }
+            else if (Git != null)
+            {
+                <small class="text-danger">Worktree fehlt</small>
+            }
+        </div>
     </div>
 </div>
 
 @code {
     [Parameter] public Feature Feature { get; set; } = null!;
+    [Parameter] public GitInfo? Git { get; set; }
+    [Parameter] public bool DockerRunning { get; set; }
     [Parameter] public EventCallback<Feature> OnOpen { get; set; }
 }

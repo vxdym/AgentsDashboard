@@ -14,10 +14,17 @@
 }
 else
 {
-    <div class="cards">
-        @foreach (var feature in features)
-        {
-            <FeatureCard Feature="feature" OnOpen="OpenFeature" />
-        }
-    </div>
+    @foreach (var group in groups)
+    {
+        <h6 class="group-title">@group.Key</h6>
+        <div class="cards">
+            @foreach (var feature in group)
+            {
+                <FeatureCard Feature="feature"
+                             Git="gitInfos.GetValueOrDefault(feature.Id)"
+                             DockerRunning="runningProjects.Any(p => p.BelongsTo(feature.WorktreePath))"
+                             OnOpen="OpenFeature" />
+            }
+        </div>
+    }
 }
