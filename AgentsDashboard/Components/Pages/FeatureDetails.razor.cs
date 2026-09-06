@@ -90,9 +90,9 @@ namespace AgentsDashboard.Components.Pages
             Try(() => Terminal.OpenClaude(feature!.WorktreePath));
         }
 
-        private void OpenCodex()
+        private void OpenPowerShell()
         {
-            Try(() => Terminal.OpenCodex(feature!.WorktreePath));
+            Try(() => Terminal.OpenPowerShell(feature!.WorktreePath));
         }
 
         private void StartAgent(AgentType type)

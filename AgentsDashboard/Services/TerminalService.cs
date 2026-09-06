@@ -28,6 +28,11 @@ namespace AgentsDashboard.Services
             OpenTerminal(path, "codex");
         }
 
+        public void OpenPowerShell(string path)
+        {
+            OpenTerminal(path);
+        }
+
         public void OpenClaudeWithPrompt(string path, string name, string prompt, bool planMode = false)
         {
             Directory.CreateDirectory(promptDir);
@@ -38,9 +43,11 @@ namespace AgentsDashboard.Services
             OpenTerminal(path, $"claude {mode}(Get-Content -Raw '{file}')");
         }
 
-        private void OpenTerminal(string path, string command)
+        private void OpenTerminal(string path, string command = "")
         {
-            runner.Start("wt", $"-d \"{path}\" powershell -NoExit -Command \"{command}\"", path);
+            string hasCommand = string.IsNullOrWhiteSpace(command) ? "" : $"& {{ {command} }}";
+
+            runner.Start("wt", $"-d \"{path}\" powershell -NoExit {hasCommand}", path);
         }
     }
 }
