@@ -4,7 +4,8 @@ using AgentsDashboard.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
+    .AddInteractiveServerComponents()
+    .AddHubOptions(options => options.MaximumReceiveMessageSize = 10 * 1024 * 1024);
 
 builder.Services.AddSingleton<FeatureStore>();
 builder.Services.AddSingleton<ProcessRunner>();
