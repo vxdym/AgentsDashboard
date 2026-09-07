@@ -14,3 +14,8 @@ h1:focus {
 .validation-message {
     color: #e50000;
 }
+
+body:has(.shutdown-overlay) #components-reconnect-modal,
+body:has(.shutdown-overlay) #blazor-error-ui {
+    display: none !important;
+}

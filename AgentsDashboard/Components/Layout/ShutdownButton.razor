@@ -1,0 +1,30 @@
+@inject IHostApplicationLifetime Lifetime
+
+<button class="shutdown-btn" @onclick="Shutdown">Beenden</button>
+
+
+@if (shuttingDown)
+{
+    <div class="shutdown-overlay">
+        <div class="shutdown-box">
+            <h5>Dashboard wurde beendet</h5>
+            <p>Dieses Fenster kann geschlossen werden.</p>
+        </div>
+    </div>
+}
+
+@code {
+    private bool confirming;
+    private bool shuttingDown;
+
+    private void Shutdown()
+    {
+        shuttingDown = true;
+
+        _ = Task.Run(async () =>
+        {
+            await Task.Delay(500);
+            Lifetime.StopApplication();
+        });
+    }
+}
