@@ -40,7 +40,8 @@ namespace AgentsDashboard.Services
             File.WriteAllText(file, prompt, Encoding.UTF8);
 
             var mode = planMode ? "--permission-mode plan " : "";
-            OpenTerminal(path, $"claude {mode}(Get-Content -Raw '{file}')");
+            var content = $"((Get-Content -Raw '{file}') -replace ('(\\\\*)'+[char]34),('$1$1\\'+[char]34))";
+            OpenTerminal(path, $"claude {mode}{content}");
         }
 
         private void OpenTerminal(string path, string command = "")
